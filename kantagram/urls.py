@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from accounts.views import LoginView, RegisterView, FeedView, show_akcija
+from accounts.views import LoginView, RegisterView, FeedView, show_akcija, logout_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^register/', RegisterView.as_view(), name='register'),
     url(r'^feed/', FeedView.as_view(), name='feed'),
     url(r'^akcija/(?P<id>\d+)/', show_akcija, name="akcija"),
+    url(r'^logout/$', logout_view, name="logout"),
 ]

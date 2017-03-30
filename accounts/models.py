@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     photo = models.URLField(default="http://www.aspirehire.co.uk/aspirehire-co-uk/_img/profile.svg")
 

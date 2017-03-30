@@ -1,8 +1,10 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views import View
 
 # Create your views here.
@@ -13,6 +15,8 @@ from .models import Profile, Akcija
 class LoginView(View):
 
     def get(self, request):
+        if request.user.is_authenticated():
+            return redirect(reverse('feed'))
         return render(request, 'login.html', {})
 
     def post(self, request):
@@ -21,7 +25,8 @@ class LoginView(View):
         try:
             user = authenticate(username=username, password=password)
             if user.is_authenticated():
-                return HttpResponseRedirect('/feed')
+                login(request, user)
+                return redirect(reverse('feed'))
         except AttributeError:
             return render(request, 'login.html', {'errormsg': 'Not valid form'})
         return render(request, 'login.html', {})
@@ -49,10 +54,13 @@ class RegisterView(View):
             return render(requset, 'register.html', {'errormsg': 'Username vec postoji!'})
         profile = Profile.objects.create(user=user)
         profile.save()
-        return HttpResponseRedirect('/admin')
+        login(requset, user)
+        return redirect(reverse('feed'))
 
 
-class FeedView(View):
+class FeedView(View, LoginRequiredMixin):
+    login_url = '/login'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request):
         lista_akcija = Akcija.objects.all().filter(successful=False)
@@ -61,6 +69,8 @@ class FeedView(View):
         }
         return render(request, 'feed.html', context)
 
+
+@login_required(login_url='/login/')
 def show_akcija(request, id=None):
     instance = get_object_or_404(Akcija, id=id)
     context = {
@@ -68,3 +78,10 @@ def show_akcija(request, id=None):
         "title": instance.title,
     }
     return render(request, "akcija_detail.html", context)
+
+
+@login_required(login_url='/login/')
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('login'))
+
