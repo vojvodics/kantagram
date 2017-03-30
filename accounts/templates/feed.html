@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for item in lista_akcija %}
+        <div class="col-md-4" style="background-color: yellow; margin: 20px;">
+            <img src="{{ item.photo }}" class=".img-responsive" />
+            <h1>{{ item.title }}</h1>
+            <p>{{ item.description }}</p>
+            <a href="{% url 'akcija' item.id %}">Read more</a>
+        </div>
+    {% endfor %}
+{% endblock %}
