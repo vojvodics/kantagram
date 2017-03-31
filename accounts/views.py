@@ -7,9 +7,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 
+from .models import Profile, Akcija, Komentar
+
 # Create your views here.
 
-from .models import Profile, Akcija
+
 
 
 class LoginView(View):
@@ -69,7 +71,7 @@ class FeedView(View, LoginRequiredMixin):
         }
         return render(request, 'feed.html', context)
 
-
+'''
 @login_required(login_url='/login/')
 def show_akcija(request, id=None):
     instance = get_object_or_404(Akcija, id=id)
@@ -78,6 +80,46 @@ def show_akcija(request, id=None):
         "title": instance.title,
     }
     return render(request, "akcija_detail.html", context)
+'''
+
+# @login_required(login_url='/login/')
+class Show_akcija(View):
+
+    def get(self, request, id=None):
+        instance = get_object_or_404(Akcija, id=id)
+        comments = instance.komentar_set.all()
+
+        if request.user.is_authenticated():
+            ulogovan = True
+        else:
+            ulogovan = False
+        context = {
+           "instance": instance,
+            "title": instance.title,
+            "comments" : comments,
+            "ulogovan" : ulogovan
+        }
+        return render(request, "akcija_detail.html", context)
+
+    def post(self, request, id=None):
+
+        user = request.user
+        instance = get_object_or_404(Akcija, id=id)
+        Komentar.objects.create(autor=user, tekst=request.POST['tekst'], akcija=instance)
+
+        comments = instance.komentar_set.all()
+
+        if request.user.is_authenticated():
+            ulogovan = True
+        else:
+            ulogovan = False
+        context = {
+           "instance": instance,
+            "title": instance.title,
+            "comments" : comments,
+            "ulogovan" : ulogovan
+        }
+        return render(request, "akcija_detail.html", context)
 
 
 @login_required(login_url='/login/')

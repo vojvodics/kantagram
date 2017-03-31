@@ -12,6 +12,23 @@
         <li>Lokacija: {{ instance.location }}</li>
         <li>Opstina: <a href="grad.html">{{ instance.state }}</a></li>
     </ul>
+<h2>Komentari</h2>
+{% for comentar in comments %}
+    <div>
+    <h4>{{ comentar.autor }}</h4>
+    <p> {{ comentar.datum_kreiranja }}</p>
+    <p>{{ comentar.tekst }}</p>
+    <p>Lajkovi: {{ comentar.lajkovi }}</p>
+    </div>
+{% endfor %}
+
+{% if ulogovan %}
+<div id="forma_za_komentar">
+    <form method="post"> {% csrf_token %}
+        <input type="text" name="tekst" placeholder="Komentar">
+    </form>
+</div>
+{% endif %}
 
 </body>
 </html>

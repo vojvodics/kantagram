@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -33,3 +34,20 @@ class Akcija (models.Model):
 class Prijava(models.Model):
     korisnik = models.ForeignKey(User)
     akcija = models.ForeignKey(Akcija)
+
+
+class Komentar(models.Model):
+    akcija = models.ForeignKey(Akcija)
+    autor = models.ForeignKey(User)
+    tekst = models.TextField()
+    datum_kreiranja = models.DateTimeField(default=timezone.now)
+    lajkovi = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.tekst
+
+class LajkZaKomentar(models.Model):
+    pass
+
+class LajkZaAkciju(models.Model):
+    pass

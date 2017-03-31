@@ -16,13 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from accounts.views import LoginView, RegisterView, FeedView, show_akcija, logout_view
+from accounts.views import LoginView, RegisterView, FeedView, logout_view, Show_akcija
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginView.as_view(), name='login'),
     url(r'^register/', RegisterView.as_view(), name='register'),
     url(r'^feed/', FeedView.as_view(), name='feed'),
-    url(r'^akcija/(?P<id>\d+)/', show_akcija, name="akcija"),
+    url(r'^akcija/(?P<id>\d+)/', Show_akcija.as_view(), name="akcija"),
     url(r'^logout/$', logout_view, name="logout"),
 ]
