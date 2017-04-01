@@ -18,6 +18,8 @@ from django.contrib import admin
 
 from accounts.views import LoginView, RegisterView, FeedView, logout_view, Show_akcija
 
+#https://github.com/DimitrijeM/kantagram_fonhakaton
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', LoginView.as_view(), name='login'),
